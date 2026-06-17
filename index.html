@@ -3,44 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>실시간 소시오메트리 갤러리</title>
+    <title>실시간 다중 좋아요 갤러리 & 소시오메트리</title>
+
     <style>
-        body { font-family: 'Malgun Gothic', sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
-        .container { max-width: 950px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h1, h2 { color: #333; text-align: center; }
-        .hidden { display: none; }
-        
-        /* 로그인/업로드/갤러리 스타일 */
-        #login-section { text-align: center; padding: 50px 0; }
-        input[type="text"] { padding: 10px; width: 200px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; margin-right: 5px; }
-        button { padding: 10px 15px; border: none; background-color: #4CAF50; color: white; border-radius: 5px; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        button:hover { background-color: #45a049; }
-        .upload-area { text-align: center; margin-bottom: 30px; padding: 20px; background: #eef2f3; border-radius: 8px; }
-        .upload-area input[type="file"] { padding: 10px; background: white; border-radius: 5px; border: 1px solid #ddd; max-width: 80%; }
-        .gallery { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-bottom: 40px; }
-        .card { background: white; border: 1px solid #ddd; border-radius: 10px; padding: 15px; width: 210px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .card img { width: 100%; height: 150px; object-fit: cover; border-radius: 5px; background-color: #eee; }
-        .btn-group { display: flex; gap: 5px; margin-top: 10px; }
-        .like-btn { background-color: #ff4757; flex: 1; padding: 8px 0; font-size: 14px; border-radius: 5px; border: none; color: white; cursor: pointer; }
-        .unlike-btn { background-color: #a4b0be; flex: 1; padding: 8px 0; font-size: 14px; border-radius: 5px; border: none; color: white; cursor: pointer; }
-        
-        /* 행렬 표 스타일 */
-        #matrix-section { margin-top: 40px; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; text-align: center; margin-top: 10px; font-size: 14px; }
-        th, td { border: 1px solid #ddd; padding: 10px; }
-        th { background-color: #f1f2f6; }
-        .highlight { background-color: #ffeaa7; font-weight: bold; color: #ff4757; }
-        .self-cell { background-color: #eee; color: #999; }
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #login-section {
+            text-align: center;
+            padding: 50px 0;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-right: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+
+        .upload-area {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #eef2f3;
+            border-radius: 8px;
+        }
+
+        .upload-area input[type="file"] {
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            max-width: 80%;
+        }
+
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            width: 210px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            background-color: #eee;
+        }
+
+        .card h3 {
+            margin: 10px 0 5px 0;
+            font-size: 18px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .like-btn {
+            background-color: #ff4757;
+            flex: 1;
+            padding: 8px 0;
+            font-size: 14px;
+            border-radius: 5px;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .like-btn:hover {
+            background-color: #ff6b81;
+        }
+
+        .unlike-btn {
+            background-color: #a4b0be;
+            flex: 1;
+            padding: 8px 0;
+            font-size: 14px;
+            border-radius: 5px;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .unlike-btn:hover {
+            background-color: #ced6e0;
+        }
+
+        #matrix-section {
+            margin-top: 40px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #f1f2f6;
+        }
+
+        .highlight {
+            background-color: #ffeaa7;
+            font-weight: bold;
+            color: #ff4757;
+        }
+
+        .self-cell {
+            background-color: #eee;
+            color: #999;
+        }
+
+        .error-box {
+            display: none;
+            margin: 20px auto 0 auto;
+            padding: 15px;
+            max-width: 700px;
+            border-radius: 8px;
+            background-color: #fff1f0;
+            border: 1px solid #ffccc7;
+            color: #a8071a;
+            text-align: left;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .info-box {
+            margin: 15px auto 0 auto;
+            padding: 12px;
+            max-width: 700px;
+            border-radius: 8px;
+            background-color: #f6ffed;
+            border: 1px solid #b7eb8f;
+            color: #135200;
+            text-align: left;
+            font-size: 13px;
+            line-height: 1.5;
+        }
     </style>
 </head>
+
 <body>
 
 <div class="container">
     <div id="login-section">
         <h1>👋 실시간 다중 갤러리</h1>
-        <p>닉네임 입력 후 입장하세요. (한 친구당 하트 5개 제한)</p>
+        <p>닉네임을 입력하고 입장하세요. 한 친구에게 최대 5번까지 좋아요를 보낼 수 있습니다!</p>
+
         <input type="text" id="nickname-input" placeholder="닉네임 입력">
         <button id="login-btn">입장하기</button>
+
+        <div class="info-box">
+            테스트 안내: 입장이 안 되면 아래에 오류 메시지가 표시됩니다.<br>
+            Firestore Database 생성 여부, Firestore 규칙, Firebase 설정값을 확인하세요.
+        </div>
+
+        <div id="error-box" class="error-box"></div>
     </div>
 
     <div id="app-section" class="hidden">
@@ -48,21 +234,22 @@
             <h1 id="welcome-msg" style="margin: 0; font-size: 24px;"></h1>
             <button id="logout-btn" style="background-color: #747d8c;">로그아웃</button>
         </div>
+
         <hr style="border: 0; height: 1px; background: #ddd; margin: 20px 0;">
 
         <div class="upload-area">
-            <h3>🖼️ 내 그림 등록하기</h3>
+            <h3>🖼️ 내 그림 등록하기 (사진첩 선택 / 촬영 가능)</h3>
             <input type="file" id="image-file" accept="image/*">
             <button id="upload-btn">사진 등록</button>
-            <button id="delete-btn" style="background-color: #e17055;">내 그림 삭제</button>
-            <button id="reset-all-btn" style="background-color: #d63031; font-size: 11px;">⚠️ 전체 초기화</button>
+            <button id="delete-btn" style="background-color: #e17055;">그림 삭제</button>
+            <button id="reset-all-btn" style="background-color: #d63031; font-size: 11px; padding: 5px 10px; margin-left: 15px;">⚠️ 전체 초기화</button>
         </div>
 
-        <h2>🎨 친구들의 작품 갤러리</h2>
+        <h2>🎨 친구들의 작품 갤러리 (개인별 최대 5개 제한)</h2>
         <div class="gallery" id="gallery-container"></div>
 
         <div id="matrix-section">
-            <h2>📊 좋아요 빈도 행렬 (받은 사람 기준)</h2>
+            <h2>📊 실시간 좋아요 빈도 행렬 (Sociomatrix)</h2>
             <div id="matrix-container"></div>
         </div>
     </div>
@@ -70,94 +257,536 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, collection, deleteDoc, getDocs, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import {
+        getFirestore,
+        doc,
+        setDoc,
+        getDoc,
+        onSnapshot,
+        updateDoc,
+        collection,
+        deleteDoc,
+        getDocs,
+        increment
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // [본인의 설정값으로 수정하세요!]
+    /*
+        중요!
+        아래 firebaseConfig는 반드시 Firebase 콘솔의 pagerank1 프로젝트 값으로 교체하세요.
+
+        Firebase 콘솔 경로:
+        프로젝트 설정 > 일반 > 내 앱 > SDK 설정 및 구성 > firebaseConfig
+    */
+
     const firebaseConfig = {
-  apiKey: "AIzaSyCwNF_w-Jbd18vvNekItiPlJzorV3fpkqg",
-  authDomain: "pagerank4.firebaseapp.com",
-  projectId: "pagerank4",
-  storageBucket: "pagerank4.firebasestorage.app",
-  messagingSenderId: "351742348459",
-  appId: "1:351742348459:web:05d8d71e989518bf00fbee",
-  measurementId: "G-3VBPRVTB3R"
+  apiKey: "AIzaSyCM962Un5uVbJZKkiZpDzPGe1mjgPuAjtE",
+  authDomain: "pagerank4-58737.firebaseapp.com",
+  projectId: "pagerank4-58737",
+  storageBucket: "pagerank4-58737.firebasestorage.app",
+  messagingSenderId: "899107302244",
+  appId: "1:899107302244:web:8294de9f408730531ba871",
+  measurementId: "G-447PDYJLZJ"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
     let currentUser = null;
-    let localAppData = {}; 
+    let localAppData = {};
+    let unsubscribeSnapshot = null;
+
+    const loginSection = document.getElementById('login-section');
+    const appSection = document.getElementById('app-section');
+    const nicknameInput = document.getElementById('nickname-input');
+    const welcomeMsg = document.getElementById('welcome-msg');
     const fileInput = document.getElementById('image-file');
+    const errorBox = document.getElementById('error-box');
+
+    function showError(title, error) {
+        console.error(title, error);
+
+        const code = error && error.code ? error.code : "오류 코드 없음";
+        const message = error && error.message ? error.message : String(error);
+
+        let help = "";
+
+        if (code.includes("permission-denied")) {
+            help =
+                "\n\n해결 방법:\n" +
+                "Firestore Database > 규칙 탭에서 읽기/쓰기 권한을 확인하세요.\n\n" +
+                "테스트용 규칙 예시:\n" +
+                "rules_version = '2';\n" +
+                "service cloud.firestore {\n" +
+                "  match /databases/{database}/documents {\n" +
+                "    match /students/{studentId} {\n" +
+                "      allow read, write: if true;\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+        } else if (message.includes("project") || message.includes("Firebase")) {
+            help =
+                "\n\n해결 방법:\n" +
+                "firebaseConfig가 현재 Firebase 프로젝트, 즉 pagerank1의 값과 일치하는지 확인하세요.";
+        } else if (message.includes("offline") || message.includes("network")) {
+            help =
+                "\n\n해결 방법:\n" +
+                "인터넷 연결 상태를 확인하세요.";
+        } else {
+            help =
+                "\n\n확인할 것:\n" +
+                "1. Firestore Database를 만들었는지 확인\n" +
+                "2. Firestore 규칙이 읽기/쓰기를 허용하는지 확인\n" +
+                "3. firebaseConfig가 pagerank1 프로젝트 값인지 확인\n" +
+                "4. App Check 강제 적용이 켜져 있지 않은지 확인";
+        }
+
+        errorBox.style.display = "block";
+        errorBox.innerText =
+            title + "\n\n" +
+            "오류 코드: " + code + "\n" +
+            "오류 메시지: " + message +
+            help;
+    }
+
+    function clearError() {
+        errorBox.style.display = "none";
+        errorBox.innerText = "";
+    }
+
+    function sanitizeNickname(name) {
+        return name
+            .trim()
+            .replace(/\//g, "-")
+            .replace(/\s+/g, " ");
+    }
 
     async function login() {
-        const name = document.getElementById('nickname-input').value.trim();
-        if (!name) return alert("닉네임을 입력하세요!");
-        currentUser = name;
-        const userRef = doc(db, "students", currentUser);
-        const userSnap = await getDoc(userRef);
-        if (!userSnap.exists()) await setDoc(userRef, { nickname: currentUser, image: "", likes: {} });
-        document.getElementById('login-section').classList.add('hidden');
-        document.getElementById('app-section').classList.remove('hidden');
-        document.getElementById('welcome-msg').innerText = `🙋‍♂️ 접속자: ${currentUser}`;
-        onSnapshot(collection(db, "students"), (snap) => {
-            localAppData = {};
-            snap.forEach(doc => localAppData[doc.id] = doc.data());
-            updateUI();
-        });
+        clearError();
+
+        const loginBtn = document.getElementById('login-btn');
+        const rawName = nicknameInput.value;
+        const name = sanitizeNickname(rawName);
+
+        if (!name) {
+            alert("닉네임을 입력해주세요!");
+            return;
+        }
+
+        try {
+            loginBtn.innerText = "입장 중...";
+            loginBtn.disabled = true;
+
+            currentUser = name;
+
+            const userRef = doc(db, "students", currentUser);
+            const userSnap = await getDoc(userRef);
+
+            if (!userSnap.exists()) {
+                await setDoc(userRef, {
+                    nickname: currentUser,
+                    image: "",
+                    likes: {}
+                });
+            }
+
+            loginSection.classList.add('hidden');
+            appSection.classList.remove('hidden');
+            welcomeMsg.innerText = `🙋‍♂️ 접속자: ${currentUser}`;
+
+            startRealtimeListener();
+
+        } catch (error) {
+            currentUser = null;
+            showError("입장 처리 중 오류가 발생했습니다.", error);
+        } finally {
+            loginBtn.innerText = "입장하기";
+            loginBtn.disabled = false;
+        }
+    }
+
+    function startRealtimeListener() {
+        try {
+            if (unsubscribeSnapshot) {
+                unsubscribeSnapshot();
+            }
+
+            unsubscribeSnapshot = onSnapshot(
+                collection(db, "students"),
+                (querySnapshot) => {
+                    localAppData = {};
+
+                    querySnapshot.forEach((doc) => {
+                        localAppData[doc.id] = doc.data();
+                    });
+
+                    updateUI();
+                },
+                (error) => {
+                    showError("Firestore 실시간 데이터 수신 중 오류가 발생했습니다.", error);
+                }
+            );
+        } catch (error) {
+            showError("실시간 리스너 시작 중 오류가 발생했습니다.", error);
+        }
     }
 
     async function uploadImage() {
+        if (!currentUser) {
+            alert("먼저 입장해주세요.");
+            return;
+        }
+
         const file = fileInput.files[0];
-        if (!file) return alert("파일을 선택하세요!");
+
+        if (!file) {
+            alert("사진 파일을 선택하거나 촬영해주세요!");
+            return;
+        }
+
+        const uploadBtn = document.getElementById('upload-btn');
+
+        try {
+            uploadBtn.innerText = "업로드 중...";
+            uploadBtn.disabled = true;
+
+            resizeImage(file, async (base64Str) => {
+                try {
+                    const userRef = doc(db, "students", currentUser);
+
+                    await updateDoc(userRef, {
+                        image: base64Str
+                    });
+
+                    alert("그림이 성공적으로 등록되었습니다!");
+                    fileInput.value = "";
+                } catch (error) {
+                    showError("그림 업로드 중 오류가 발생했습니다.", error);
+                } finally {
+                    uploadBtn.innerText = "사진 등록";
+                    uploadBtn.disabled = false;
+                }
+            });
+        } catch (error) {
+            showError("이미지 처리 중 오류가 발생했습니다.", error);
+            uploadBtn.innerText = "사진 등록";
+            uploadBtn.disabled = false;
+        }
+    }
+
+    function resizeImage(file, callback) {
         const reader = new FileReader();
-        reader.onload = (e) => {
+
+        reader.onload = function (e) {
             const img = new Image();
-            img.onload = async () => {
+
+            img.onload = function () {
                 const canvas = document.createElement('canvas');
-                const MAX = 500;
-                let w = img.width, h = img.height;
-                if (w > MAX) { h *= MAX/w; w = MAX; }
-                canvas.width = w; canvas.height = h;
-                canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                await updateDoc(doc(db, "students", currentUser), { image: canvas.toDataURL('image/jpeg', 0.7) });
+
+                let width = img.width;
+                let height = img.height;
+
+                const MAX_WIDTH = 500;
+
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                callback(dataUrl);
             };
+
+            img.onerror = function () {
+                alert("이미지를 불러오지 못했습니다. 다른 사진으로 시도해주세요.");
+            };
+
             img.src = e.target.result;
         };
+
+        reader.onerror = function () {
+            alert("파일을 읽지 못했습니다.");
+        };
+
         reader.readAsDataURL(file);
     }
 
-    async function addLike(target) {
-        if (target === currentUser) return;
-        const myCount = (localAppData[target].likes && localAppData[target].likes[currentUser]) || 0;
-        if (myCount >= 5) return alert("최대 5개까지만 가능합니다!");
-        await updateDoc(doc(db, "students", target), { [`likes.${currentUser}`]: increment(1) });
+    async function deleteMyImage() {
+        if (!currentUser) {
+            alert("먼저 입장해주세요.");
+            return;
+        }
+
+        if (!confirm("등록하신 그림을 삭제하시겠습니까?")) return;
+
+        try {
+            const userRef = doc(db, "students", currentUser);
+
+            await updateDoc(userRef, {
+                image: ""
+            });
+        } catch (error) {
+            showError("그림 삭제 중 오류가 발생했습니다.", error);
+        }
     }
 
-    async function removeLike(target) {
-        const myCount = (localAppData[target].likes && localAppData[target].likes[currentUser]) || 0;
-        if (myCount <= 0) return;
-        await updateDoc(doc(db, "students", target), { [`likes.${currentUser}`]: increment(-1) });
+    async function addLike(targetUser) {
+        if (!currentUser) {
+            alert("먼저 입장해주세요.");
+            return;
+        }
+
+        if (targetUser === currentUser) {
+            alert("자신의 작품에는 좋아요를 누를 수 없습니다!");
+            return;
+        }
+
+        try {
+            const targetData = localAppData[targetUser] || {};
+            const likesMap = targetData.likes || {};
+            const myCount = likesMap[currentUser] || 0;
+
+            if (myCount >= 5) {
+                alert(`🔔 ${targetUser}님에게는 이미 최대 5번의 하트를 모두 보냈습니다!`);
+                return;
+            }
+
+            const targetRef = doc(db, "students", targetUser);
+
+            await updateDoc(targetRef, {
+                [`likes.${currentUser}`]: increment(1)
+            });
+        } catch (error) {
+            showError("좋아요 처리 중 오류가 발생했습니다.", error);
+        }
     }
 
+    async function removeLike(targetUser) {
+        if (!currentUser) {
+            alert("먼저 입장해주세요.");
+            return;
+        }
+
+        if (targetUser === currentUser) return;
+
+        try {
+            const targetData = localAppData[targetUser] || {};
+            const likesMap = targetData.likes || {};
+            const currentLikes = likesMap[currentUser] || 0;
+
+            if (currentLikes <= 0) {
+                alert("보낸 하트가 이미 0개입니다!");
+                return;
+            }
+
+            const targetRef = doc(db, "students", targetUser);
+
+            await updateDoc(targetRef, {
+                [`likes.${currentUser}`]: increment(-1)
+            });
+        } catch (error) {
+            showError("좋아요 취소 중 오류가 발생했습니다.", error);
+        }
+    }
+
+    async function resetAllData() {
+        const password = prompt("초기화 비밀번호를 입력하세요. (기본: 1234)");
+
+        if (password !== "1234") {
+            alert("비밀번호가 틀렸습니다.");
+            return;
+        }
+
+        if (!confirm("모든 학생 데이터와 하트 기록을 삭제하시겠습니까?")) return;
+
+        try {
+            const querySnapshot = await getDocs(collection(db, "students"));
+            const deletePromises = [];
+
+            querySnapshot.forEach((doc) => {
+                deletePromises.push(deleteDoc(doc.ref));
+            });
+
+            await Promise.all(deletePromises);
+
+            alert("초기화되었습니다.");
+        } catch (error) {
+            showError("전체 초기화 중 오류가 발생했습니다.", error);
+        }
+    }
+
+    function logout() {
+        if (unsubscribeSnapshot) {
+            unsubscribeSnapshot();
+            unsubscribeSnapshot = null;
+        }
+
+        currentUser = null;
+        localAppData = {};
+        nicknameInput.value = "";
+
+        loginSection.classList.remove('hidden');
+        appSection.classList.add('hidden');
+    }
+
+    function updateUI() {
+        renderGallery();
+        renderMatrix();
+    }
+
+    function renderGallery() {
+        const container = document.getElementById('gallery-container');
+        container.innerHTML = "";
+
+        const entries = Object.entries(localAppData).sort((a, b) => {
+            return a[0].localeCompare(b[0], "ko");
+        });
+
+        for (const [user, data] of entries) {
+            if (!data.image) continue;
+
+            const likesMap = data.likes || {};
+            const totalLikes = Object.values(likesMap).reduce((a, b) => a + Number(b || 0), 0);
+            const myCount = likesMap[currentUser] || 0;
+
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            const gaugeText = myCount >= 5
+                ? "🔥 풀 하트 완료!"
+                : `(${myCount} / 5개 보냄)`;
+
+            card.innerHTML = `
+                <img src="${data.image}" alt="${user}의 그림" onerror="this.src='https://via.placeholder.com/200?text=No+Image'">
+                <h3>${user}</h3>
+                <p style="font-size:13px; color:#222; margin:5px 0;">
+                    ❤️ 총 하트: <strong>${totalLikes}</strong>개
+                </p>
+                <p style="font-size:11px; color:${myCount >= 5 ? '#ff4757' : '#666'}; margin:0 0 10px 0; font-weight:${myCount >= 5 ? 'bold' : 'normal'};">
+                    ${gaugeText}
+                </p>
+                <div class="btn-group">
+                    <button class="like-btn" id="like-${cssSafeId(user)}">❤️ 좋아요</button>
+                    <button class="unlike-btn" id="unlike-${cssSafeId(user)}">💔 취소</button>
+                </div>
+            `;
+
+            container.appendChild(card);
+
+            document.getElementById(`like-${cssSafeId(user)}`).addEventListener('click', () => addLike(user));
+            document.getElementById(`unlike-${cssSafeId(user)}`).addEventListener('click', () => removeLike(user));
+        }
+
+        if (container.innerHTML.trim() === "") {
+            container.innerHTML = "<p style='text-align:center; color:#999;'>아직 등록된 그림이 없습니다.</p>";
+        }
+    }
+
+    function cssSafeId(text) {
+        return encodeURIComponent(text).replace(/%/g, "_");
+    }
+
+    /*
+        소시오메트리 행렬
+
+        저장 구조:
+        localAppData[받은사람].likes[보낸사람] = 하트 개수
+
+        표시 구조:
+        행 = 받은 사람
+        열 = 보낸 사람
+    */
     function renderMatrix() {
         const container = document.getElementById('matrix-container');
-        const users = Object.keys(localAppData).sort();
-        let html = "<table><tr><th>받은 사람 \\ 보낸 사람</th>";
-        users.forEach(u => html += `<th>${u}</th>`);
-        html += "<th>받은 총합</th></tr>";
+        const users = Object.keys(localAppData).sort((a, b) => a.localeCompare(b, "ko"));
+
+        if (users.length === 0) {
+            container.innerHTML = "<p style='text-align:center; color:#999;'>참여 중인 학생이 없습니다.</p>";
+            return;
+        }
+
+        let tableHTML = "<table>";
+
+        tableHTML += "<tr>";
+        tableHTML += "<th>받은 사람 (Row) \\ 보낸 사람 (Col)</th>";
+
+        users.forEach(sender => {
+            tableHTML += `<th>${escapeHTML(sender)}</th>`;
+        });
+
+        tableHTML += "<th>받은 총 하트</th>";
+        tableHTML += "</tr>";
+
         users.forEach(receiver => {
-            html += `<tr><th>${receiver}</th>`;
-            let receiveCount = 0;
+            const receiverLikes = localAppData[receiver].likes || {};
+            let receivedTotal = 0;
+
+            tableHTML += "<tr>";
+            tableHTML += `<th>${escapeHTML(receiver)}</th>`;
+
             users.forEach(sender => {
-                if (sender === receiver) html += `<td class='self-cell'>-</td>`;
-                else {
-                    const count = (localAppData[receiver].likes || {})[sender] || 0;
-                    receiveCount += count;
-                    html += `<td class='${count > 0 ? "highlight" : ""}'>${count}</td>`;
+                if (sender === receiver) {
+                    tableHTML += `<td class="self-cell">-</td>`;
+                } else {
+                    const count = Number(receiverLikes[sender] || 0);
+                    receivedTotal += count;
+
+                    tableHTML += `<td class="${count > 0 ? 'highlight' : ''}">${count}</td>`;
                 }
             });
-            html += `<td><strong>${receiveCount}</strong></td></tr>`;
+
+            tableHTML += `<td><strong>${receivedTotal}</strong></td>`;
+            tableHTML += "</tr>";
         });
-        container.innerHTML = html;
+
+        tableHTML += "<tr>";
+        tableHTML += "<th>보낸 총 하트</th>";
+
+        users.forEach(sender => {
+            let sentTotal = 0;
+
+            users.forEach(receiver => {
+                if (sender === receiver) return;
+
+                const receiverLikes = localAppData[receiver].likes || {};
+                sentTotal += Number(receiverLikes[sender] || 0);
+            });
+
+            tableHTML += `<td><strong>${sentTotal}</strong></td>`;
+        });
+
+        tableHTML += "<td class='self-cell'></td>";
+        tableHTML += "</tr>";
+
+        tableHTML += "</table>";
+
+        container.innerHTML = tableHTML;
     }
+
+    function escapeHTML(text) {
+        return String(text)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    document.getElementById('login-btn').addEventListener('click', login);
+    document.getElementById('upload-btn').addEventListener('click', uploadImage);
+    document.getElementById('delete-btn').addEventListener('click', deleteMyImage);
+    document.getElementById('reset-all-btn').addEventListener('click', resetAllData);
+    document.getElementById('logout-btn').addEventListener('click', logout);
+
+    nicknameInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') login();
+    });
+</script>
+
+</body>
+</html>
